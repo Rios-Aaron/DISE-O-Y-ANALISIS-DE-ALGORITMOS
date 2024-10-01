@@ -1,0 +1,113 @@
+import random
+
+class ArbolNodo:
+    def __init__(self, cuenta, nombre, edad, correo, semestre, materias, promedio):
+        self.cuenta = cuenta
+        self.nombre = nombre
+        self.edad = edad
+        self.correo = correo
+        self.semestre = semestre
+        self.materias = materias
+        self.promedio = promedio
+        self.left = None
+        self.right = None
+
+class Arbol:
+    def __init__(self):
+        self.root = None
+
+    def insert(self, cuenta, nombre, edad, correo, semestre, materias, promedio):
+        if self.root is None:
+            self.root = ArbolNodo(cuenta, nombre, edad, correo, semestre, materias, promedio)
+        else:
+            self._insert(self.root, cuenta, nombre, edad, correo, semestre, materias, promedio)
+
+    def _insert(self, node, cuenta, nombre, edad, correo, semestre, materias, promedio):
+        if cuenta < node.cuenta:
+            if node.left is None:
+                node.left = ArbolNodo(cuenta, nombre, edad, correo, semestre, materias, promedio)
+            else:
+                self._insert(node.left, cuenta, nombre, edad, correo, semestre, materias, promedio)
+        elif cuenta > node.cuenta:
+            if node.right is None:
+                node.right = ArbolNodo(cuenta, nombre, edad, correo, semestre, materias, promedio)
+            else:
+                self._insert(node.right, cuenta, nombre, edad, correo, semestre, materias, promedio)
+
+    def search(self, cuenta):
+        return self._search(self.root, cuenta)
+
+    def _search(self, node, cuenta):
+        if node is None or node.cuenta == cuenta:
+            return node
+        if cuenta < node.cuenta:
+            return self._search(node.left, cuenta)
+        else:
+            return self._search(node.right, cuenta)
+
+nombres = ["Ana", "Luis", "Pedro", "María", "Juan", "Carla", "Miguel", "Laura", "Jorge", "Lucía"]
+apellidos = ["Pérez", "López", "González", "Rodríguez", "Martínez", "Hernández", "Sánchez", "Ramírez", "Torres", "Flores"]
+materias_por_semestre = {
+    1: ["Álgebra", "Cálculo", "Geometria analitica", "Introduccion a la computacion"],
+    2: ["Programación Orientada a Objetos", "Cálculo Vectorial", "Ecuaciones diferenciales"],
+    3: ["Álgebra Lineal", "Estructura de Datos", "Probabilidad", "Metodos numericos"],
+    4: ["Bases de Datos", "Dispositivos electronicos", "Matematicas discretas"],
+    5: ["Diseño logico", "Lenguajes formales y automatas" "Análisis y diseño de Algoritmos", "Programación Web" ],
+    6: ["Sistemas Distribuidos", "Aprendizaje Automático", "Minería de Datos", "Sistemas Operativos"],
+    7: ["Ciberseguridad", "Blockchain", "Computación Cuántica", "Diseño de Interfaces"],
+    8: ["Realidad Aumentada", "Redes Neuronales", "Robótica", "Optimización"],
+    9: ["Desarrollo de Apps", "Gestión de Proyectos", "Innovación", "Negocios Digitales"]
+}
+
+def generar_correo(nombre, apellido):
+    dominios = ["@fes.unam.mx", "@alumnos.unam.mx", "@unam.mx"]
+    return f"{nombre.lower()}.{apellido.lower()}{random.randint(100, 999)}{random.choice(dominios)}"
+
+def generar_alumno():
+    nombre = random.choice(nombres) + " " + random.choice(apellidos)
+    edad = random.randint(18, 25)
+    semestre = random.randint(1, 9)
+    materias = random.sample(materias_por_semestre[semestre], 5)
+    promedio = round(random.uniform(5.0, 10.0), 2)
+    correo = generar_correo(nombre.split()[0], nombre.split()[1])
+    cuenta = random.randint(1000000, 9999999)
+    return cuenta, nombre, edad, correo, semestre, materias, promedio
+
+Arbol = Arbol()
+for _ in range(100):
+    cuenta, nombre, edad, correo, semestre, materias, promedio = generar_alumno()
+    Arbol.insert(cuenta, nombre, edad, correo, semestre, materias, promedio)
+
+def menu():
+    while True:
+        print("\nMenú:")
+        print("1. Insertar un nuevo alumno")
+        print("2. Consultar un alumno por número de cuenta")
+        print("3. Salir")
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            # Insertar un nuevo alumno
+            cuenta, nombre, edad, correo, semestre, materias, promedio = generar_alumno()
+            Arbol.insert(cuenta, nombre, edad, correo, semestre, materias, promedio)
+            print(f"Alumno {nombre} con número de cuenta {cuenta} insertado.")
+        
+        elif opcion == "2":
+            # Consultar un alumno
+            cuenta = int(input("Ingrese el número de cuenta del alumno: "))
+            alumno = Arbol.search(cuenta)
+            if alumno:
+                print(f"Nombre completo: {alumno.nombre}")
+                print(f"Materias cursando: {', '.join(alumno.materias)}")
+                print(f"Promedio general: {alumno.promedio}")
+            else:
+                print("Alumno no encontrado.")
+        
+        elif opcion == "3":
+            print("Saliendo del programa.")
+            break
+
+        else:
+            print("Opción no válida, intente de nuevo.")
+
+menu()
