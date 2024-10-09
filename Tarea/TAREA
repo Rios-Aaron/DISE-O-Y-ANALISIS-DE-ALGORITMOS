@@ -87,13 +87,11 @@ def menu():
         opcion = input("Seleccione una opción: ")
 
         if opcion == "1":
-            # Insertar un nuevo alumno
             cuenta, nombre, edad, correo, semestre, materias, promedio = generar_alumno()
             Arbol.insert(cuenta, nombre, edad, correo, semestre, materias, promedio)
             print(f"Alumno {nombre} con número de cuenta {cuenta} insertado.")
         
         elif opcion == "2":
-            # Consultar un alumno
             cuenta = int(input("Ingrese el número de cuenta del alumno: "))
             alumno = Arbol.search(cuenta)
             if alumno:
