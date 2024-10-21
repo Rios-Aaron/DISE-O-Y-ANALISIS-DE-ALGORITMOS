@@ -1,0 +1,40 @@
+import itertools
+def Viajero(ciudad_actual, subconjunto, distancias, memo):
+    if not subconjunto:
+        return distancias[ciudad_actual][0]
+
+    estado = (ciudad_actual, tuple(subconjunto))
+    if estado in memo:
+        return memo[estado]
+
+    distancia_minima = float('inf')
+
+    for ciudad in subconjunto:
+        nuevo_subconjunto = set(subconjunto) - {ciudad}
+        distancia_actual = distancias[ciudad_actual][ciudad] + Viajero(ciudad, nuevo_subconjunto, distancias, memo)
+        distancia_minima = min(distancia_minima, distancia_actual)
+
+    memo[estado] = distancia_minima
+    return distancia_minima
+
+def resolver_Viajero(distancias):
+    n = len(distancias)
+    
+    subconjunto = set(range(1, n))
+    
+    memo = {}
+    
+    distancia_minima = Viajero(0, subconjunto, distancias, memo)
+    
+    return distancia_minima
+
+if __name__ == "__main__":
+    distancias = [
+        [0, 10, 15, 20],
+        [10, 0, 35, 25],
+        [15, 35, 0, 30],
+        [20, 25, 30, 0]
+    ]
+    
+    resultado = resolver_Viajero(distancias)
+    print(f"La distancia mínima para visitar todas las ciudades es: {resultado}")

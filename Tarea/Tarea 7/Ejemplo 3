@@ -1,12 +1,10 @@
 import itertools
 import string
 
-# Función de fuerza bruta para contraseñas
 def fuerza_bruta(password):
-    caracteres = string.ascii_lowercase  # Usamos solo letras minúsculas
+    caracteres = string.ascii_lowercase
     longitud_password = len(password)
     
-    # Iteramos por todas las combinaciones posibles de esa longitud
     for intento in itertools.product(caracteres, repeat=longitud_password):
         intento_str = ''.join(intento)
         if intento_str == password:
@@ -14,9 +12,7 @@ def fuerza_bruta(password):
 
     return "No se encontró la contraseña."
 
-# Ejemplo de uso
-password_objetivo = "abc"  # La contraseña que queremos encontrar
+password_objetivo = "abc" 
 
-# Ejecutamos la función de fuerza bruta
 resultado = fuerza_bruta(password_objetivo)
 print(resultado)

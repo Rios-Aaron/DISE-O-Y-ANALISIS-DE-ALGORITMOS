@@ -1,27 +1,23 @@
 import itertools
 
-# Función para encontrar la combinación mínima de monedas
 def min_coins(moneda_valores, S):
-    min_num_monedas = float('inf')  # Inicializamos con un valor muy alto
-    mejor_combinacion = None  # Para guardar la mejor combinación
+    min_num_monedas = float('inf')
+    mejor_combinacion = None
 
-    # Recorremos todas las combinaciones posibles de monedas de todos los tamaños
     for i in range(1, len(moneda_valores) + 1):
         for combinacion in itertools.combinations_with_replacement(moneda_valores, i):
-            if sum(combinacion) == S:  # Si la suma de la combinación es igual a S
-                if len(combinacion) < min_num_monedas:  # Si es la combinación más corta
-                    min_num_monedas = len(combinacion)  # Actualizar el mínimo número de monedas
-                    mejor_combinacion = combinacion  # Guardar la combinación
+            if sum(combinacion) == S: 
+                if len(combinacion) < min_num_monedas:
+                    min_num_monedas = len(combinacion)
+                    mejor_combinacion = combinacion 
 
     if mejor_combinacion is None:
         return "No hay solución"
     else:
         return f"La mínima cantidad de monedas es {min_num_monedas}, usando la combinación {mejor_combinacion}"
 
-# Ejemplo de uso
-moneda_valores = [1, 2, 5]  # Valores de las monedas
-S = 11  # Cantidad objetivo
+moneda_valores = [1, 2, 5] 
+S = 11  
 
-# Llamamos a la función y mostramos el resultado
 resultado = min_coins(moneda_valores, S)
 print(resultado)
