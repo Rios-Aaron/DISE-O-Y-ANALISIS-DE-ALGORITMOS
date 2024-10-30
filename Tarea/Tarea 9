@@ -1,0 +1,70 @@
+# Definición del laberinto
+laberinto = [
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'P', 'C', 'C', 'C', 'C', 'P'],
+    ['P', 'P', 'C', 'P', 'P', 'P', 'C', 'P'],
+    ['P', 'P', 'C', 'P', 'C', 'P', 'C', 'P'],
+    ['P', 'P', 'C', 'P', 'C', 'P', 'C', 'P'],
+    ['P', 'P', 'P', 'C', 'C', 'P', 'S', 'P'],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'C', 'C', 'C', 'P', 'P', 'P'],
+    ['P', 'P', 'C', 'P', 'P', 'P', 'P', 'P'],
+    ['P', 'P', 'E', 'P', 'P', 'P', 'P', 'P']
+]
+
+# Definición de coordenadas de inicio y fin
+inicio = (9, 6)  # Posición de 'S'
+fin = (13, 2)    # Posición de 'E'
+
+# Función para resolver el laberinto usando backtracking
+def resolver_laberinto(laberinto, inicio, fin):
+    # Movimientos posibles: izquierda, arriba, derecha, abajo
+    movimientos = [(-1, 0), (0, -1), (1, 0), (0, 1)]
+    
+    # Pila para almacenar el camino
+    stack = [(inicio[0], inicio[1])]
+    
+    # Marca la celda de inicio como visitada
+    laberinto[inicio[0]][inicio[1]] = 'X'
+    
+    # Realiza el backtracking
+    while stack:
+        x, y = stack[-1]
+        
+        # Si se alcanza el destino, retorna el camino
+        if (x, y) == fin:
+            return stack
+        
+        # Bandera para verificar si se encontró un movimiento válido
+        movimiento_encontrado = False
+        
+        # Prueba cada movimiento
+        for dx, dy in movimientos:
+            nx, ny = x + dx, y + dy
+            
+            # Verifica si la posición es válida y no está visitada
+            if 0 <= nx < len(laberinto) and 0 <= ny < len(laberinto[0]) and laberinto[nx][ny] in ['C', 'E']:
+                stack.append((nx, ny))  # Añade la nueva posición al camino
+                laberinto[nx][ny] = 'X' # Marca como visitado
+                movimiento_encontrado = True
+                break
+        
+        # Si no se encontró un movimiento válido, retrocede (backtrack)
+        if not movimiento_encontrado:
+            stack.pop()
+    
+    # Si no se encuentra la salida, retorna None
+    return None
+
+# Llamada a la función y muestra del resultado
+camino = resolver_laberinto(laberinto, inicio, fin)
+if camino:
+    print("Camino encontrado:")
+    for paso in camino:
+        print(paso)
+else:
+    print("No se encontró un camino hasta la salida.")
