@@ -1,0 +1,72 @@
+from queue import PriorityQueue
+
+maze = [
+    ["P", "P", "P", "P", "P", "P", "P", "P"],
+    ["P", "P", "P", "P", "P", "P", "P", "P"],
+    ["P", "P", "C", "C", "C", "C", "P", "P"],
+    ["P", "C", "C", "P", "P", "C", "C", "P"],
+    ["P", "C", "P", "P", "P", "P", "C", "P"],
+    ["P", "C", "C", "C", "C", "P", "C", "P"],
+    ["P", "C", "C", "C", "C", "C", "P", "P"],
+    ["P", "P", "P", "P", "C", "P", "C", "P"],
+    ["P", "C", "C", "P", "C", "P", "C", "S"],
+    ["P", "P", "C", "P", "P", "P", "C", "P"],
+    ["P", "P", "C", "C", "C", "P", "C", "P"],
+    ["P", "P", "P", "P", "C", "P", "P", "P"],
+    ["P", "C", "C", "P", "C", "C", "C", "P"],
+    ["P", "E", "P", "P", "P", "P", "P", "P"]
+]
+
+rows, cols = len(maze), len(maze[0])
+
+start = None
+end = None
+for i in range(rows):
+    for j in range(cols):
+        if maze[i][j] == "E":
+            start = (i, j)
+        elif maze[i][j] == "S":
+            end = (i, j)
+
+def manhattan_distance(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+def get_neighbors(position):
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]  
+    neighbors = []
+    for d in directions:
+        new_row, new_col = position[0] + d[0], position[1] + d[1]
+        if 0 <= new_row < rows and 0 <= new_col < cols and maze[new_row][new_col] in ("P", "S"):
+            neighbors.append((new_row, new_col))
+    return neighbors
+
+def branch_and_bound(maze, start, end):
+    pq = PriorityQueue()
+    pq.put((0, start, [start]))  
+    visited = set()
+
+    while not pq.empty():
+        cost, current, path = pq.get()
+
+        if current in visited:
+            continue
+        visited.add(current)
+
+        if current == end:
+            return path
+
+        for neighbor in get_neighbors(current):
+            if neighbor not in visited:
+                new_cost = cost + 1 + manhattan_distance(neighbor, end)
+                pq.put((new_cost, neighbor, path + [neighbor]))
+
+    return None 
+
+path = branch_and_bound(maze, start, end)
+
+if path:
+    print("Camino encontrado:")
+    for step in path:
+        print(step)
+else:
+    print("No se encontró un camino.")
